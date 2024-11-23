@@ -17,3 +17,22 @@ sed -i "s/'UTC'/'CST-8'/g" package/base-files/files/bin/config_generate
 # 增加设置时区名称为 Asia/Shanghai 的代码
 sed -i "/set system.\@system\[-1\].timezone='CST-8'/a\ \ \ \ set system.\@system\[-1\].zonename='Asia/Shanghai'" package/base-files/files/bin/config_generate
 
+mkdir -p package/base-files/files/etc/config
+cat << EOF > package/base-files/files/etc/config/network
+config device
+    option name 'br-lan'
+    option type 'bridge'
+    list ports 'eth0'
+    list ports 'eth2'
+    list ports 'eth3'
+
+config interface 'lan'
+    option device 'br-lan'
+    option proto 'static'
+    option ipaddr '192.168.89.1'  # 修改为默认 IP
+    option netmask '255.255.255.0'
+
+config interface 'wan'
+    option device 'eth1'
+    option proto 'dhcp'
+EOF
