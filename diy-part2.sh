@@ -22,39 +22,3 @@ sed -i "s/'UTC'/'CST-8'/g" package/base-files/files/bin/config_generate
 # 在时区设置后添加区域名称设置
 sed -i "/set system.\@system\[-1\].timezone='CST-8'/a\ \ \ \ set system.\@system\[-1\].zonename='Asia/Shanghai'" package/base-files/files/bin/config_generate
 
-# 自定义网络配置
-cat << EOF > ./package/base-files/files/etc/config/network
-config interface 'loopback'
-    option device 'lo'
-    option proto 'static'
-    option ipaddr '127.0.0.1'
-    option netmask '255.0.0.0'
-
-config globals 'globals'
-    option ula_prefix 'fd00::/48'
-
-# 配置 LAN
-config device
-    option name 'br-lan'
-    option type 'bridge'
-    list ports 'eth0'
-    list ports 'eth2'
-    list ports 'eth3'
-
-config interface 'lan'
-    option device 'br-lan'
-    option proto 'static'
-    option ipaddr '192.168.89.1'
-    option netmask '255.255.255.0'
-    option ip6assign '60'
-
-# 配置 WAN
-config interface 'wan'
-    option device 'eth1'
-    option proto 'dhcp'
-
-config interface 'wan6'
-    option device 'eth1'
-    option proto 'dhcpv6'
-EOF
-
